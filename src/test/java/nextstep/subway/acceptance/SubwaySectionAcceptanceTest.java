@@ -6,30 +6,25 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.junit.jupiter.api.AfterEach;
+import nextstep.subway.station.StationResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.HttpStatus;
-import subway.station.StationResponse;
 
 @DisplayName("지하철 구간 테스트")
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
-public class SubwaySectionAcceptanceTest {
+public class SubwaySectionAcceptanceTest extends AcceptanceTest {
 
     Long upStationId;
     Long downStationId;
     Long extraStationId;
     Long lineId;
 
-    @Autowired
-    private DatabaseCleaner databaseCleaner;
-
     @BeforeEach
-    void setUp() {
+    void setUpEnvironment() {
         upStationId = StationApiRequester.createStation("역1").jsonPath().getLong("id");
         downStationId = StationApiRequester.createStation("역2").jsonPath().getLong("id");
         extraStationId = StationApiRequester.createStation("역3").jsonPath().getLong("id");
@@ -41,11 +36,6 @@ public class SubwaySectionAcceptanceTest {
             downStationId,
             10L
         ).jsonPath().getLong("id");
-    }
-
-    @AfterEach
-    void cleanUp() {
-        databaseCleaner.tableClear();
     }
 
     /**

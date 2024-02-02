@@ -7,19 +7,17 @@ import io.restassured.response.Response;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import org.junit.jupiter.api.AfterEach;
+import nextstep.subway.lines.LineResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.HttpStatus;
-import subway.lines.LineResponse;
 
 @DisplayName("지하철 노선 기능")
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
-public class SubwayLinesAcceptanceTest {
+public class SubwayLinesAcceptanceTest extends AcceptanceTest {
 
     private String 일호선 = "일호선";
     private String 이호선 = "이호선";
@@ -27,18 +25,11 @@ public class SubwayLinesAcceptanceTest {
     private String 빨간색 = "bg-red-600";
     private String 파란색 = "bg-blue-600";
 
-    @Autowired
-    private DatabaseCleaner databaseCleaner;
 
     @BeforeEach
-    void setUp() {
+    void setUpEnvironment() {
         StationApiRequester.createStation("강남역");
         StationApiRequester.createStation("역삼역");
-    }
-
-    @AfterEach
-    void cleanUp() {
-        databaseCleaner.tableClear();
     }
 
     /**

@@ -5,9 +5,9 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.HashMap;
 import java.util.Map;
+import nextstep.subway.station.StationResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import subway.station.StationResponse;
 
 public final class StationApiRequester {
 
