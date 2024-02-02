@@ -17,12 +17,10 @@ class LineTest {
         final Station 강남역 = new Station("강남역");
         final Station 역삼역 = new Station("역삼역");
         final Station 선릉역 = new Station("선릉역");
-        final Line line = new Line("2호선", "green", 강남역.getId(), 역삼역.getId(), 10L);
+        final Line line = new Line("2호선", "green", 강남역, 역삼역, 10L);
 
-        final Section 구간1 = new Section(line, 강남역, 역삼역, 10L);
         final Section 구간2 = new Section(line, 역삼역, 선릉역, 10L);
 
-        line.addSection(구간1);
         line.addSection(구간2);
 
         assertThat(line.getSections()).hasSize(2);
@@ -35,10 +33,7 @@ class LineTest {
         // 해당 노선의 모든 역의 id가 반환된다.
         final Station 강남역 = new Station("강남역");
         final Station 역삼역 = new Station("역삼역");
-        final Line line = new Line("2호선", "green", 강남역.getId(), 역삼역.getId(), 10L);
-        final Section section = new Section(line, 강남역, 역삼역, 10L);
-
-        line.addSection(section);
+        final Line line = new Line("2호선", "green", 강남역, 역삼역, 10L);
 
         assertThat(line.getStations()).hasSize(2);
     }
@@ -52,12 +47,10 @@ class LineTest {
         final Station 강남역 = new Station("강남역");
         final Station 역삼역 = new Station("역삼역");
         final Station 선릉역 = new Station("선릉역");
-        final Line line = new Line("2호선", "green", 강남역.getId(), 역삼역.getId(), 10L);
+        final Line line = new Line("2호선", "green", 강남역, 역삼역, 10L);
 
-        final Section 구간1 = new Section(line, 강남역, 역삼역, 10L);
         final Section 구간2 = new Section(line, 역삼역, 선릉역, 10L);
 
-        line.addSection(구간1);
         line.addSection(구간2);
 
         line.removeSection(구간2);
