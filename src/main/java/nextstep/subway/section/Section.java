@@ -6,7 +6,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import nextstep.subway.lines.Line;
+import nextstep.subway.station.Station;
 
 @Entity()
 public class Section {
@@ -17,15 +19,20 @@ public class Section {
     @JoinColumn(name = "lineId")
     private Line line;
 
-    private Long upStationId;
-    private Long downStationId;
+    @OneToOne
+    @JoinColumn(name = "upStationId")
+    private Station upStation;
+
+    @OneToOne
+    @JoinColumn(name = "downStationId")
+    private Station downStation;
 
     private Long distance;
 
-    public Section(Line line, Long upStationId, Long downStationId, Long distance) {
+    public Section(Line line, Station upStation, Station downStation, Long distance) {
         this.line = line;
-        this.upStationId = upStationId;
-        this.downStationId = downStationId;
+        this.upStation = upStation;
+        this.downStation = downStation;
         this.distance = distance;
     }
 
@@ -41,12 +48,20 @@ public class Section {
         return line;
     }
 
+    public Station getUpStation() {
+        return upStation;
+    }
+
     public Long getUpStationId() {
-        return upStationId;
+        return upStation.getId();
+    }
+
+    public Station getDownStation() {
+        return downStation;
     }
 
     public Long getDownStationId() {
-        return downStationId;
+        return downStation.getId();
     }
 
     public Long getDistance() {

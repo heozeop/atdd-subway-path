@@ -31,17 +31,17 @@ public class LineService {
 
     @Transactional
     public LineResponse saveLine(LineCreateRequest lineCreateRequest) {
+        final Station upStation = stationRepository.findById(lineCreateRequest.getUpStationId()).orElseThrow(EntityNotFoundException::new);
+        final Station downStation = stationRepository.findById(lineCreateRequest.getDownStationId()).orElseThrow(EntityNotFoundException::new);
         final Line line = lineRepository.save(lineCreateRequest.getLine());
+
         line.addSection(
-            new Section(
-                line,
-                lineCreateRequest.getUpStationId(),
-                lineCreateRequest.getDownStationId(),
-                lineCreateRequest.getDistance()
-            )
+            upStation,
+            downStation,
+            lineCreateRequest.getDistance()
         );
 
-        return createLineResponse(line);
+        return new LineResponse(line);
     }
 
     public List<LineResponse> getLines() {
@@ -52,7 +52,7 @@ public class LineService {
     public LineResponse getLine(Long id) {
         final Line line = lineRepository.findById(id).orElseThrow(EntityNotFoundException::new);
 
-        return createLineResponse(line);
+        return new LineResponse(line);
     }
 
     @Transactional
@@ -73,9 +73,11 @@ public class LineService {
 
         sectionAddRequest.validateSectionToAdd(line);
 
-        line.addSection(sectionAddRequest.getSection(line));
+        final Station upStation = stationRepository.findById(sectionAddRequest.getUpStationId()).orElseThrow(EntityNotFoundException::new);
+        final Station downStation = stationRepository.findById(sectionAddRequest.getDownStationId()).orElseThrow(EntityNotFoundException::new);
+        line.addSection(upStation, downStation, sectionAddRequest.getDistance());
 
-        return createLineResponse(line);
+        return new LineResponse(line);
     }
 
     @Transactional
@@ -88,19 +90,7 @@ public class LineService {
     }
 
     private LineResponse createLineResponse(Line line) {
-        final Set<Long> stationIdSet = new HashSet<>();
-        line.getSections().forEach(section -> {
-            stationIdSet.addAll(
-                Arrays.asList(
-                    section.getUpStationId(),
-                    section.getDownStationId()
-                )
-            );
-        });
-
-        final List<Station> stations = stationRepository.findAllById(stationIdSet);
-
-        return new LineResponse(line, stations);
+        return new LineResponse(line);
     }
 
 }

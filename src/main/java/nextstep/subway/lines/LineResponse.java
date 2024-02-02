@@ -17,11 +17,11 @@ public class LineResponse {
 
     }
 
-    public LineResponse(Line line, List<Station> stations) {
+    public LineResponse(Line line) {
         this.id = line.getId();
         this.name = line.getName();
         this.color = line.getColor();
-        this.stations = stations.stream().map(StationResponse::new).collect(Collectors.toList());
+        this.stations = line.getStations().stream().map(StationResponse::new).collect(Collectors.toList());
     }
 
     public Long getId() {

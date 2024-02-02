@@ -1,13 +1,17 @@
 package nextstep.subway.lines;
 
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import nextstep.subway.section.Section;
 import nextstep.subway.section.SectionList;
+import nextstep.subway.station.Station;
 
 @Entity
 public class Line {
@@ -59,7 +63,7 @@ public class Line {
     }
 
     public void deleteSection(Section section) {
-        downStationId = section.getUpStationId();
+        downStationId = section.getDownStationId();
         distance -= section.getDistance();
         sectionList.deleteSection(section);
     }
@@ -70,11 +74,33 @@ public class Line {
         distance += section.getDistance();
     }
 
+    public void addSection(Station upStation, Station downStation, Long distance) {
+        final Section section = new Section(this, upStation, downStation, distance);
+
+        sectionList.addSection(section);
+        downStationId = section.getDownStationId();
+        this.distance += section.getDistance();
+    }
+
     public Long getDownStationId() {
         return downStationId;
     }
 
     public List<Section> getSections() {
         return sectionList.getSections();
+    }
+
+    public List<Station> getStations() {
+        final Set<Station> stationSet = new HashSet<>();
+        sectionList.getSections().forEach(section -> {
+            stationSet.addAll(
+                Arrays.asList(
+                    section.getUpStation(),
+                    section.getDownStation()
+                )
+            );
+        });
+
+        return List.copyOf(stationSet);
     }
 }

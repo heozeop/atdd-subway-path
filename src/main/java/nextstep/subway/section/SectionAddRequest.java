@@ -29,10 +29,6 @@ public class SectionAddRequest {
         return distance;
     }
 
-    public Section getSection(Line line) {
-        return new Section(line, upStationId, downStationId, distance);
-    }
-
     public void validateSectionToAdd(Line line) {
         final Set<Long> stationIdSet = new HashSet<>();
         line.getSections().forEach(section -> {
