@@ -62,7 +62,7 @@ public class Line {
         this.color = color;
     }
 
-    public void deleteSection(Section section) {
+    public void removeSection(Section section) {
         downStationId = section.getDownStationId();
         distance -= section.getDistance();
         sectionList.deleteSection(section);

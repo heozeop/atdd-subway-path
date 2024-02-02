@@ -1,9 +1,6 @@
 package nextstep.subway.lines;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
 import nextstep.subway.section.SectionRepository;
@@ -86,7 +83,7 @@ public class LineService {
         sectionDeleteRequest.validateToDelete(line);
 
         final Section sectionToDelete = sectionRepository.findByLineIdAndDownStationId(id, sectionDeleteRequest.getStationId()).orElseThrow(EntityNotFoundException::new);
-        line.deleteSection(sectionToDelete);
+        line.removeSection(sectionToDelete);
     }
 
     private LineResponse createLineResponse(Line line) {
