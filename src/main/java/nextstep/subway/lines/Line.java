@@ -29,12 +29,14 @@ public class Line {
     @Embedded
     private SectionList sectionList = new SectionList();
 
-    public Line(String name, String color, Long upStationId, Long downStationId, Long distance) {
+    public Line(String name, String color, Station upStation, Station downStation, Long distance) {
         this.name = name;
         this.color = color;
-        this.upStationId = upStationId;
-        this.downStationId = downStationId;
+        upStationId = upStation.getId();
+        downStationId = downStation.getId();
         this.distance = distance;
+
+        addSection(upStation, downStation, distance);
     }
 
     public Line() {

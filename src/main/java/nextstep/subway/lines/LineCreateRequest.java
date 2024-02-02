@@ -1,5 +1,7 @@
 package nextstep.subway.lines;
 
+import nextstep.subway.station.Station;
+
 public class LineCreateRequest {
 
     private final String name;
@@ -42,7 +44,7 @@ public class LineCreateRequest {
         return distance;
     }
 
-    public Line getLine() {
-        return new Line(name, color, upStationId, downStationId, distance);
+    public Line getLine(Station upStation, Station downStation) {
+        return new Line(name, color, upStation, downStation, distance);
     }
 }
