@@ -5,6 +5,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
 import javax.persistence.OneToMany;
+import nextstep.subway.lines.Line;
+import nextstep.subway.station.Station;
 
 @Embeddable
 public class SectionList {
@@ -18,6 +20,10 @@ public class SectionList {
 
     public void addSection(Section section) {
         sections.add(section);
+    }
+
+    public void addSection(Line line,Station upStation, Station downStation, Long distance) {
+        sections.add(new Section(line, upStation, downStation, distance));
     }
 
     public void deleteSection(Section section) {

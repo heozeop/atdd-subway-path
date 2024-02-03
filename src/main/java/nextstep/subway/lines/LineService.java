@@ -1,6 +1,7 @@
 package nextstep.subway.lines;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
 import nextstep.subway.section.SectionRepository;
@@ -18,12 +19,9 @@ public class LineService {
 
     private final LineRepository lineRepository;
     private final StationRepository stationRepository;
-    private final SectionRepository sectionRepository;
-
-    public LineService(LineRepository lineRepository, StationRepository stationRepository, SectionRepository sectionRepository) {
+    public LineService(LineRepository lineRepository, StationRepository stationRepository) {
         this.lineRepository = lineRepository;
         this.stationRepository = stationRepository;
-        this.sectionRepository = sectionRepository;
     }
 
     @Transactional
@@ -36,7 +34,7 @@ public class LineService {
     }
 
     public List<LineResponse> getLines() {
-        return lineRepository.findAll().stream().map(this::createLineResponse)
+        return lineRepository.findAll().stream().map(LineResponse::new)
             .collect(Collectors.toList());
     }
 
@@ -76,12 +74,14 @@ public class LineService {
         final Line line = lineRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         sectionDeleteRequest.validateToDelete(line);
 
-        final Section sectionToDelete = sectionRepository.findByLineIdAndDownStationId(id, sectionDeleteRequest.getStationId()).orElseThrow(EntityNotFoundException::new);
+        final Section sectionToDelete = line.getSections().stream()
+            .filter(section ->
+                Objects.equals(
+                    sectionDeleteRequest.getStationId(),
+                    section.getDownStationId()
+                )
+            )
+            .findFirst().orElseThrow(EntityNotFoundException::new);
         line.removeSection(sectionToDelete);
     }
-
-    private LineResponse createLineResponse(Line line) {
-        return new LineResponse(line);
-    }
-
 }

@@ -32,11 +32,11 @@ public class Line {
     public Line(String name, String color, Station upStation, Station downStation, Long distance) {
         this.name = name;
         this.color = color;
-        upStationId = upStation.getId();
-        downStationId = downStation.getId();
         this.distance = distance;
 
-        addSection(upStation, downStation, distance);
+        upStationId = upStation.getId();
+        downStationId = downStation.getId();
+        sectionList.addSection(this, upStation, downStation, distance);
     }
 
     public Line() {
@@ -77,11 +77,9 @@ public class Line {
     }
 
     public void addSection(Station upStation, Station downStation, Long distance) {
-        final Section section = new Section(this, upStation, downStation, distance);
-
-        sectionList.addSection(section);
-        downStationId = section.getDownStationId();
-        this.distance += section.getDistance();
+        sectionList.addSection(this, upStation, downStation, distance);
+        downStationId = downStation.getId();
+        this.distance += distance;
     }
 
     public Long getDownStationId() {
