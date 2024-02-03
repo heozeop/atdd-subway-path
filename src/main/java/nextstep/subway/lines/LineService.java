@@ -84,4 +84,10 @@ public class LineService {
             .findFirst().orElseThrow(EntityNotFoundException::new);
         line.removeSection(sectionToDelete);
     }
+
+    public LineResponse findLineById(Long id) {
+        final Line line = lineRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+
+        return new LineResponse(line);
+    }
 }

@@ -1,5 +1,7 @@
 package nextstep.subway.unit;
 
+import java.util.Optional;
+import nextstep.subway.lines.Line;
 import nextstep.subway.lines.LineCreateRequest;
 import nextstep.subway.lines.LineRepository;
 import nextstep.subway.lines.LineResponse;
@@ -15,6 +17,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+
 @ExtendWith(MockitoExtension.class)
 public class LineServiceMockTest {
     @Mock
@@ -22,28 +27,32 @@ public class LineServiceMockTest {
 
     @Mock
     private StationRepository stationRepository;
-    @Mock
-    private StationService stationService;
 
     @Test
     void addSection() {
         // given
         // lineRepository, stationService stub 설정을 통해 초기값 셋팅
-        final StationService stationService = new StationService(stationRepository);
         final LineService lineService = new LineService(lineRepository, stationRepository);
+        final Long 강남역_id = 1L;
+        final Long 역삼역_id = 2L;
+        final Long 선릉역_id = 3L;
+        final Long line_id = 1L;
 
-        final Long 강남역 = stationService.saveStation(new StationRequest("강남역")).getId();
-        final Long 역삼역 = stationService.saveStation(new StationRequest("역삼역")).getId();
-        final Long 선릉역 = stationService.saveStation(new StationRequest("선릉역")).getId();
+        final Station 강남역 = new Station(강남역_id,"강남역");
+        final Station 역삼역 = new Station(역삼역_id,"역삼역");
+        final Station 선릉역 = new Station(선릉역_id,"선릉역");
+        final Line line = new Line("2호선", "green", 강남역, 역삼역, 10L);
 
-        final LineResponse lineResponse = lineService.saveLine(new LineCreateRequest("2호선", "green", 강남역, 역삼역, 10L));
+        when(stationRepository.findById(역삼역_id)).thenReturn(Optional.of(역삼역));
+        when(stationRepository.findById(선릉역_id)).thenReturn(Optional.of(선릉역));
+        when(lineRepository.findById(line_id)).thenReturn(Optional.of(line));
 
         // when
         // lineService.addSection 호출
-        lineService.addSection(lineResponse.getId(), new SectionAddRequest(강남역, 역삼역, 10L));
+        lineService.addSection(line_id, new SectionAddRequest(역삼역_id, 선릉역_id,10L));
 
         // then
         // lineService.findLineById 메서드를 통해 검증
-        lineService.findLineById(lineResponse.getId());
+        assertThat(lineService.findLineById(line_id).getName()).isEqualTo("2호선");
     }
 }
